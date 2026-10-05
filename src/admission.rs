@@ -135,7 +135,8 @@ fn field_rank(field: &str) -> usize {
 }
 
 /// The code for a schema-invalid item: the alphabetically first missing field of the item itself, else an
-/// unknown slot or authority, else invalid structure (R-2, R-21). A variant's missing field is not the item's.
+/// unknown slot or authority, whatever its JSON type, else invalid structure (R-1, R-2, R-21). A variant's missing
+/// field is not the item's.
 fn schema_code(errors: &[SchemaError]) -> String {
     let mut missing: Vec<&str> = errors.iter().filter(|e| e.path.is_empty()).filter_map(|e| e.missing.as_deref()).collect();
     missing.sort_by(|a, b| cmp_utf16(a, b));

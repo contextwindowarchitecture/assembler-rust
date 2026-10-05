@@ -607,7 +607,7 @@
   ],
   "contract": {
     "dirty": false,
-    "website_commit": "13d32033d514b31a8c45439d3a19b9146b978fd6"
+    "website_commit": "9e24a299c6efec7982031e3f0e2f1bd6188d0d0c"
   },
   "implementation": {
     "language": "Rust",
