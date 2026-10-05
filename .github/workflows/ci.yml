@@ -46,8 +46,7 @@ jobs:
           python-version: "3.x"
       - run: pip install jsonschema
       - run: python3 scripts/vendor_contract.py --verify
-      # Drop --allow-failures once the conformance test's PENDING set is empty.
-      - run: python3 scripts/check_report.py --allow-failures
+      - run: python3 scripts/check_report.py
 
   contract:
     name: vendored contract matches the website

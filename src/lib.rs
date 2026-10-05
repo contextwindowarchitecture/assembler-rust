@@ -8,18 +8,44 @@
 use std::collections::BTreeMap;
 use std::fmt;
 
+mod admission;
+mod assemble;
 pub mod canonical;
+pub mod conformance;
 pub mod contract;
+mod fitting;
 pub mod instant;
 pub mod json;
 pub mod model;
 pub mod render;
+mod resolve;
 pub mod schema;
 pub mod snapshot;
 pub mod strings;
 pub mod tokenize;
+pub mod trace;
 
 pub use tokenize::Tokenizer;
+pub use trace::Trace;
+
+/// An assembly: the payload bytes, or none when the assembly was refused (`trace.refused.reason` says why),
+/// and the trace.
+#[derive(Debug, Clone)]
+pub struct Assembly {
+    pub payload: Option<Vec<u8>>,
+    pub trace: Trace,
+}
+
+/// Assembles a snapshot, given as the bytes of its JSON text, with the published components alone.
+pub fn assemble(snapshot: &[u8]) -> Result<Assembly, Error> {
+    assemble_with(snapshot, &Options::new())
+}
+
+/// Assembles a snapshot with the caller's options: its own tokenizers, and a trace id.
+pub fn assemble_with(snapshot: &[u8], options: &Options) -> Result<Assembly, Error> {
+    let prepared = prepare(snapshot, options)?;
+    Ok(assemble::run(prepared, options.trace_id.as_deref()))
+}
 
 /// The implementation, as conformance reports name it. A test holds it to `Cargo.toml`.
 pub const IMPLEMENTATION_NAME: &str = "cwa-assembler";
@@ -55,6 +81,7 @@ impl std::error::Error for Error {}
 #[derive(Default)]
 pub struct Options {
     tokenizers: BTreeMap<String, Box<dyn Tokenizer>>,
+    trace_id: Option<String>,
 }
 
 impl Options {
@@ -65,6 +92,13 @@ impl Options {
     /// Adds a tokenizer under an id. Assembly stops before it begins if the id is a published tokenizer's (R-16).
     pub fn tokenizer(mut self, id: impl Into<String>, tokenizer: impl Tokenizer + 'static) -> Options {
         self.tokenizers.insert(id.into(), Box::new(tokenizer));
+        self
+    }
+
+    /// Sets the trace id. Without one, each assembly gets a random id; it is the one field besides `timings`
+    /// that may differ between runs of the same snapshot (R-23).
+    pub fn trace_id(mut self, id: impl Into<String>) -> Options {
+        self.trace_id = Some(id.into());
         self
     }
 }
