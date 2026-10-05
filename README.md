@@ -41,7 +41,7 @@ let assembly = assemble_with(&snapshot, &options)?;
 
 ## Requirements
 
-Rust 1.80 or newer. The dependencies are `serde`, `serde_json`, `regex` and `sha2`.
+Rust 1.80 or newer, the release that stabilized `std::sync::LazyLock`; CI builds and tests on 1.80 and on stable. The dependencies, which need at most 1.71, are `serde`, `serde_json`, `regex` and `sha2`.
 
 ## Development
 
