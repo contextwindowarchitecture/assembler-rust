@@ -1,6 +1,5 @@
 # The vendored contract against the website commit it pins, and the committed conformance report against the
-# contract. Both jobs do nothing until the contract is vendored (PORTING.md, step 2). Add the port's own test
-# suite as a third job, on every runtime it supports; the commented block is the shape.
+# contract, and the suite on the oldest Rust this package supports (Cargo.toml's rust-version) and on stable.
 # A tag runs it through release.yml, on the tagged commit.
 name: ci
 
