@@ -1,0 +1,8 @@
+# Add the language's build outputs and caches below. vendor/ stays tracked: it is the pinned contract.
+.claude/
+.codex/
+.idea/
+.vscode/
+.DS_Store
+__pycache__/
+/target/

@@ -1,0 +1,74 @@
+# The vendored contract against the website commit it pins, and the committed conformance report against the
+# contract. Both jobs do nothing until the contract is vendored (PORTING.md, step 2). Add the port's own test
+# suite as a third job, on every runtime it supports; the commented block is the shape.
+# A tag runs it through release.yml, on the tagged commit.
+name: ci
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_call:
+    inputs:
+      ref:
+        description: The commit to test; release.yml passes the tag
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: cargo test (Rust ${{ matrix.version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ["1.80", "stable"]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+      - run: rustup toolchain install ${{ matrix.version }} --profile minimal && rustup default ${{ matrix.version }}
+      - run: cargo build --locked
+      - run: cargo test --locked
+
+  report:
+    name: committed conformance report is complete and well-formed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - run: pip install jsonschema
+      - run: python3 scripts/vendor_contract.py --verify
+      # Drop --allow-failures once the conformance test's PENDING set is empty.
+      - run: python3 scripts/check_report.py --allow-failures
+
+  contract:
+    name: vendored contract matches the website
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+      - id: lock
+        run: |
+          if [ -f vendor/cwa.lock.json ]; then
+            echo "commit=$(python3 -c 'import json; print(json.load(open("vendor/cwa.lock.json"))["website_commit"])')" >> "$GITHUB_OUTPUT"
+          else
+            echo "nothing vendored yet (PORTING.md, step 2)"
+          fi
+      # The locked commit must be pushed to the website repository for this checkout to find it.
+      - if: steps.lock.outputs.commit != ''
+        uses: actions/checkout@v5
+        with:
+          repository: contextwindowarchitecture/website
+          ref: ${{ steps.lock.outputs.commit }}
+          path: website
+      - if: steps.lock.outputs.commit != ''
+        run: python3 scripts/vendor_contract.py --website website --check

@@ -1,0 +1,24 @@
+[package]
+name = "cwa-assembler"
+version = "0.0.1"
+edition = "2021"
+rust-version = "1.80"
+description = "A Rust assembler for the Context Window Architecture (CWA) draft specification"
+license = "Apache-2.0"
+repository = "https://github.com/contextwindowarchitecture/assembler-rust"
+homepage = "https://contextwindowarchitecture.io"
+readme = "README.md"
+keywords = ["llm", "context-window", "prompt", "cwa"]
+categories = ["text-processing"]
+include = ["src/**", "vendor/**", "Cargo.toml", "README.md", "LICENSE", "NOTICE"]
+
+[lib]
+name = "cwa_assembler"
+
+[dependencies]
+regex = { version = "1", default-features = false, features = ["std", "unicode-perl", "unicode-gencat"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+
+[dev-dependencies]
