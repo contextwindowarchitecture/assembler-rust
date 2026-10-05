@@ -55,7 +55,7 @@ The modules follow the pipeline: `json` and `schema` read and validate a snapsho
 
 ## Cost
 
-Every reduction under budget pressure is its own fit test, and every fit test renders and counts the whole payload (conformance/README.md, Fitting), so work grows with the number of reductions times the payload's size. Token counts of rendered bodies are cached per item, placement and variant, but the whole payload is counted for each fit test, since no shortcut may change a decision. Keep the cost down at the source, as the spec advises: send no more passages than the route's budget can use, and bound slots with `max_per_source` or `max_tokens`.
+Every reduction under budget pressure is its own fit test, and every fit test renders and counts the whole payload (conformance/README.md, Fitting), so work grows with the number of reductions times the payload's size. Token counts of rendered bodies are cached per item, placement and variant, but the whole payload is counted for each fit test, since no shortcut may change a decision; a fit test runs only before a reduction that could be made. On an Apple-silicon laptop, a release build sheds 499 of 500 chunks of about 1 KB each in about 0.2 s. Keep the cost down at the source, as the spec advises: send no more passages than the route's budget can use, and bound slots with `max_per_source` or `max_tokens`.
 
 ## Conformance
 

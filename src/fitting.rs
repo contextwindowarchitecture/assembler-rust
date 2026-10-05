@@ -137,14 +137,16 @@ impl<'a> Fitter<'a> {
             }
         }
 
-        // 4. While the payload does not fit, omit droppable items in shedding order, under slot floors.
+        // 4. While the payload does not fit, omit droppable items in shedding order, under slot floors. The fit
+        // test runs only before a reduction that could be made, which changes no decision.
         for i in self.shedding_order() {
+            if !self.included[i] || self.items[i].tier != Tier::Droppable || self.frozen.contains(&self.items[i].slot) {
+                continue;
+            }
             if self.fits() {
                 break;
             }
-            if self.included[i] && self.items[i].tier == Tier::Droppable && !self.frozen.contains(&self.items[i].slot)
-                && self.floor_holds(i, None)
-            {
+            if self.floor_holds(i, None) {
                 self.omit(i);
             }
         }
@@ -188,10 +190,13 @@ impl<'a> Fitter<'a> {
     /// soon as `done` holds. Under budget pressure a slot floor can withhold a reduction and freeze the slot.
     fn step(&mut self, slot: &str, action: &str, done: &dyn Fn(&Fitter) -> bool, floors: bool) {
         for i in self.slot_shedding(slot, Tier::Compressible) {
-            if done(self) || (floors && self.frozen.contains(slot)) {
+            if floors && self.frozen.contains(slot) {
                 return;
             }
             if action == "omit" {
+                if done(self) {
+                    return;
+                }
                 if !floors || self.floor_holds(i, None) {
                     self.omit(i);
                 }
@@ -201,6 +206,9 @@ impl<'a> Fitter<'a> {
             let shorter: Vec<usize> = (0..self.items[i].variants.len()).filter(|&v| self.size(i, Some(v)) < current).collect();
             if shorter.is_empty() {
                 continue;
+            }
+            if done(self) {
+                return;
             }
             let before = self.body[i];
             let fitting: Vec<usize> = shorter.iter().copied().filter(|&v| {
