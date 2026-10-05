@@ -3,3 +3,5 @@
 pub mod canonical;
 pub mod instant;
 pub mod strings;
+pub mod json;
+pub mod schema;
