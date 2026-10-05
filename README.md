@@ -51,6 +51,16 @@ cargo test
 cargo run --release --bin cwa-conformance
 ```
 
+```mermaid
+flowchart LR
+  J["json, schema, snapshot<br/>I-JSON, schemas, snapshot checks, digest"] --> A[admission]
+  A --> C["resolve<br/>conflicts, supersession,<br/>dedupe, source diversity"]
+  C --> R[refusal checks]
+  R --> F[fitting]
+  F --> P["render, tokenize"]
+  P --> T[trace]
+```
+
 The modules follow the pipeline: `json` and `schema` read and validate a snapshot, `snapshot` runs the snapshot checks and computes the digest, `admission`, `resolve` (conflicts, supersession, deduplication, source diversity) and `fitting` assemble it, `render` and `tokenize` provide the published components, and `trace` holds the output. `strings`, `instant` and `canonical` implement the README's Ordering, Timestamps and RFC 8785 rules; `contract` reads the vendored reason codes, slot defaults and published component ids.
 
 ## Cost
