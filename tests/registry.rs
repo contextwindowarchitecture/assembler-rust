@@ -3,8 +3,8 @@
 
 use std::path::Path;
 
-use cwa_assembler::canonical::{sha256_hex, to_string};
-use cwa_assembler::json::parse;
+use contextwindowarchitecture_assembler::canonical::{sha256_hex, to_string};
+use contextwindowarchitecture_assembler::json::parse;
 use serde_json::Value;
 
 fn read(name: &str) -> Value {

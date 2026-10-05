@@ -5,7 +5,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use cwa_assembler::{assemble, assemble_with, contract, Error, Options};
+use contextwindowarchitecture_assembler::{assemble, assemble_with, contract, Error, Options};
 use serde_json::Value;
 
 fn case(id: &str) -> Vec<u8> {
@@ -64,7 +64,7 @@ fn only_trace_id_and_timings_differ_between_runs() {
         let bytes = fs::read(dir.join("snapshot.json")).unwrap();
         let (a, b) = (assemble(&bytes).unwrap(), assemble(&bytes).unwrap());
         assert_eq!(a.payload, b.payload, "{}", dir.display());
-        let strip = |assembly: &cwa_assembler::Assembly| {
+        let strip = |assembly: &contextwindowarchitecture_assembler::Assembly| {
             let mut trace = assembly.trace.to_json();
             trace.as_object_mut().unwrap().remove("trace_id");
             trace.as_object_mut().unwrap().remove("timings");

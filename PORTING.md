@@ -116,7 +116,7 @@ R-16 lets an application count with a tokenizer of its own, and a port may take 
 The port needs a command that runs every case and rejection and writes `conformance-report.json` (README, Reporting results). Until a native runner exists, `scripts/conformance.py` does it through a small adapter the port provides:
 
 ```sh
-python3 scripts/conformance.py --command "<adapter command>" --name cwa-assembler --version <version> --language Rust
+python3 scripts/conformance.py --command "<adapter command>" --name contextwindowarchitecture-assembler --version <version> --language Rust
 ```
 
 The adapter is started once per snapshot with the snapshot file's bytes on stdin, and answers by exit code:

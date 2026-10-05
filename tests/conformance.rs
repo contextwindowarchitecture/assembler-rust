@@ -9,7 +9,7 @@
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
-use cwa_assembler::conformance::{ids, run_case, run_rejection};
+use contextwindowarchitecture_assembler::conformance::{ids, run_case, run_rejection};
 
 const PENDING: &[&str] = &[];
 

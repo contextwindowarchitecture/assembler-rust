@@ -1,5 +1,5 @@
 [package]
-name = "cwa-assembler"
+name = "contextwindowarchitecture-assembler"
 version = "0.0.1"
 edition = "2021"
 rust-version = "1.80"
@@ -13,7 +13,7 @@ categories = ["text-processing"]
 include = ["src/**", "vendor/**", "Cargo.toml", "README.md", "LICENSE", "NOTICE"]
 
 [lib]
-name = "cwa_assembler"
+name = "contextwindowarchitecture_assembler"
 
 [dependencies]
 regex = { version = "1", default-features = false, features = ["std", "unicode-perl", "unicode-gencat"] }

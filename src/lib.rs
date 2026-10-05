@@ -48,7 +48,7 @@ pub fn assemble_with(snapshot: &[u8], options: &Options) -> Result<Assembly, Err
 }
 
 /// The implementation, as conformance reports name it. A test holds it to `Cargo.toml`.
-pub const IMPLEMENTATION_NAME: &str = "cwa-assembler";
+pub const IMPLEMENTATION_NAME: &str = "contextwindowarchitecture-assembler";
 pub const IMPLEMENTATION_VERSION: &str = "0.0.1";
 pub const IMPLEMENTATION_LANGUAGE: &str = "Rust";
 

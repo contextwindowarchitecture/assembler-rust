@@ -4,7 +4,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use cwa_assembler::{check, Error, Options};
+use contextwindowarchitecture_assembler::{check, Error, Options};
 
 fn dirs(kind: &str) -> Vec<PathBuf> {
     let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("vendor/cwa/conformance").join(kind);

@@ -1,4 +1,4 @@
-cwa-assembler, a Rust assembler for the Context Window Architecture draft specification
+contextwindowarchitecture-assembler, a Rust assembler for the Context Window Architecture draft specification
 Copyright 2026 Melvin Hillsman
 
 This product is licensed under the Apache License, Version 2.0 (see LICENSE).

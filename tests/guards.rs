@@ -6,8 +6,8 @@ use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use cwa_assembler::canonical::sha256_hex;
-use cwa_assembler::conformance::report;
+use contextwindowarchitecture_assembler::canonical::sha256_hex;
+use contextwindowarchitecture_assembler::conformance::report;
 use serde_json::Value;
 
 fn root() -> PathBuf {
@@ -51,9 +51,9 @@ fn the_license_is_the_specifications() {
 
 #[test]
 fn the_implementation_is_named_as_the_manifest_names_it() {
-    assert_eq!(cwa_assembler::IMPLEMENTATION_NAME, env!("CARGO_PKG_NAME"));
-    assert_eq!(cwa_assembler::IMPLEMENTATION_VERSION, env!("CARGO_PKG_VERSION"));
-    assert_eq!(cwa_assembler::IMPLEMENTATION_LANGUAGE, "Rust");
+    assert_eq!(contextwindowarchitecture_assembler::IMPLEMENTATION_NAME, env!("CARGO_PKG_NAME"));
+    assert_eq!(contextwindowarchitecture_assembler::IMPLEMENTATION_VERSION, env!("CARGO_PKG_VERSION"));
+    assert_eq!(contextwindowarchitecture_assembler::IMPLEMENTATION_LANGUAGE, "Rust");
 }
 
 #[test]
@@ -66,6 +66,6 @@ fn the_committed_report_is_the_current_run() {
 #[test]
 fn the_report_is_valid_against_its_schema() {
     let committed = json(&root().join("conformance-report.json"));
-    let errors = cwa_assembler::schema::validate("conformance_report.schema.json", &committed);
+    let errors = contextwindowarchitecture_assembler::schema::validate("conformance_report.schema.json", &committed);
     assert!(errors.is_empty(), "{errors:?}");
 }

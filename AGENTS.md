@@ -62,5 +62,5 @@ Everything here is the rule set the Python reference assembler and the TypeScrip
 | `python3 scripts/vendor_contract.py --website ../website` | Re-vendor the contract from a website checkout, and rewrite the lock |
 | `python3 scripts/vendor_contract.py --verify` | Check `vendor/cwa/` against its lock |
 | `cargo run --release --bin cwa-conformance` | Run every case and rejection natively and write `conformance-report.json` |
-| `cargo build --release && python3 scripts/conformance.py --command target/release/cwa-adapter --name cwa-assembler --version 0.0.1 --language Rust --out /tmp/report.json` | The same run through the template's runner and the adapter protocol (PORTING.md, step 5), a cross-check of the native runner |
+| `cargo build --release && python3 scripts/conformance.py --command target/release/cwa-adapter --name contextwindowarchitecture-assembler --version 0.0.1 --language Rust --out /tmp/report.json` | The same run through the template's runner and the adapter protocol (PORTING.md, step 5), a cross-check of the native runner |
 | `python3 scripts/check_report.py` | Check the committed report is complete and well-formed |

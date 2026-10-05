@@ -1,4 +1,4 @@
-# cwa-assembler
+# contextwindowarchitecture-assembler
 
 A Rust assembler for the [Context Window Architecture](https://contextwindowarchitecture.io) (CWA) draft specification. It admits candidate items, resolves declared conflicts, fits them to a token budget, renders the payload and emits the trace.
 
@@ -8,13 +8,13 @@ Status: passes all 61 published conformance cases and rejects all 25 rejection s
 
 ```toml
 [dependencies]
-cwa-assembler = { git = "https://github.com/contextwindowarchitecture/assembler-rust" }
+contextwindowarchitecture-assembler = { git = "https://github.com/contextwindowarchitecture/assembler-rust" }
 ```
 
 ## Use
 
 ```rust
-use cwa_assembler::{assemble, assemble_with, Error, Options};
+use contextwindowarchitecture_assembler::{assemble, assemble_with, Error, Options};
 
 let snapshot = std::fs::read("snapshot.json")?;
 match assemble(&snapshot) {

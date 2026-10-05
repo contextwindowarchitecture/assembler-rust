@@ -611,7 +611,7 @@
   },
   "implementation": {
     "language": "Rust",
-    "name": "cwa-assembler",
+    "name": "contextwindowarchitecture-assembler",
     "version": "0.0.1"
   },
   "rejections": [

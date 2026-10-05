@@ -3,7 +3,7 @@
 
 use std::path::Path;
 
-use cwa_assembler::assemble;
+use contextwindowarchitecture_assembler::assemble;
 use serde_json::{json, Value};
 
 #[test]

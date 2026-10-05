@@ -7,7 +7,7 @@
 use std::path::PathBuf;
 use std::process::ExitCode;
 
-use cwa_assembler::conformance::{report, report_text};
+use contextwindowarchitecture_assembler::conformance::{report, report_text};
 
 fn main() -> ExitCode {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));

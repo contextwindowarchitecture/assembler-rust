@@ -6,7 +6,7 @@
 use std::io::{Read, Write};
 use std::process::ExitCode;
 
-use cwa_assembler::{assemble, Error};
+use contextwindowarchitecture_assembler::{assemble, Error};
 use serde_json::{json, Value};
 
 fn main() -> ExitCode {
