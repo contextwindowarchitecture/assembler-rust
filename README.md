@@ -48,7 +48,7 @@ Rust 1.80 or newer, the release that stabilized `std::sync::LazyLock`; CI builds
 ```sh
 cargo build
 cargo test
-cargo run --release --bin cwa-conformance
+cargo run --release --example conformance
 ```
 
 ```mermaid
@@ -70,10 +70,10 @@ Every reduction under budget pressure is its own fit test, and every fit test re
 ## Conformance
 
 ```sh
-cargo run --release --bin cwa-conformance
+cargo run --release --example conformance
 ```
 
-This runs every vendored case and rejection snapshot as `conformance/README.md` describes, natively; `scripts/conformance.py --command target/release/cwa-adapter` runs them through the template's runner instead, for a cross-check. It writes `conformance-report.json`, valid against `schema/conformance_report.schema.json`, and exits 1 unless every case passed and every rejection snapshot was rejected, apart from those skipped for an optional component. A case passes only when its payload matches byte for byte and its trace matches field for field, except `trace_id`, `timings` and `recovery.detail`. The committed report is the current run: a test fails when it goes stale. A case is skipped only when it uses a tokenizer or renderer the vendored README lists under Optional, such as `cwa-message-blocks/v1`, and this package does not provide it; a case that uses only required ones and does not pass has failed.
+This runs every vendored case and rejection snapshot as `conformance/README.md` describes, natively; `scripts/conformance.py --command target/release/examples/adapter`, after `cargo build --release --example adapter`, runs them through the template's runner instead, for a cross-check. Both are examples, not binaries, so `cargo install` never puts them on a PATH: they read the cases from this checkout. It writes `conformance-report.json`, valid against `schema/conformance_report.schema.json`, and exits 1 unless every case passed and every rejection snapshot was rejected, apart from those skipped for an optional component. A case passes only when its payload matches byte for byte and its trace matches field for field, except `trace_id`, `timings` and `recovery.detail`. The committed report is the current run: a test fails when it goes stale. A case is skipped only when it uses a tokenizer or renderer the vendored README lists under Optional, such as `cwa-message-blocks/v1`, and this package does not provide it; a case that uses only required ones and does not pass has failed.
 
 ## The contract
 

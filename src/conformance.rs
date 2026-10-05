@@ -1,5 +1,5 @@
 //! Running the vendored conformance cases and writing the report (conformance/README.md, Running a case,
-//! Reporting results). The `cwa-conformance` binary and the test suite both use it.
+//! Reporting results). The `conformance` example and the test suite both use it.
 
 use std::fs;
 use std::path::Path;

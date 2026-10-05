@@ -2,7 +2,10 @@
 //! (conformance/README.md, Reporting results). Exits 1 unless every case passed and every rejection snapshot was
 //! rejected, apart from those skipped for an optional component this package leaves out.
 //!
-//!     cargo run --release --bin cwa-conformance [-- --out <path>]
+//!     cargo run --release --example conformance [-- --out <path>]
+//!
+//! It is an example rather than a binary so that `cargo install` never puts it on a PATH: it reads the cases
+//! from this checkout, where Cargo built it.
 
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -17,7 +20,7 @@ fn main() -> ExitCode {
         match (arg.as_str(), args.next()) {
             ("--out", Some(path)) => out = PathBuf::from(path),
             _ => {
-                eprintln!("usage: cwa-conformance [--out <path>]");
+                eprintln!("usage: cargo run --release --example conformance [-- --out <path>]");
                 return ExitCode::from(2);
             }
         }

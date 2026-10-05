@@ -60,7 +60,7 @@ fn the_implementation_is_named_as_the_manifest_names_it() {
 fn the_committed_report_is_the_current_run() {
     let committed = json(&root().join("conformance-report.json"));
     let fresh = report(&root().join("vendor/cwa/conformance"), &json(&root().join("vendor/cwa.lock.json")));
-    assert!(committed == fresh, "conformance-report.json is stale; run `cargo run --release --bin cwa-conformance`");
+    assert!(committed == fresh, "conformance-report.json is stale; run `cargo run --release --example conformance`");
 }
 
 #[test]

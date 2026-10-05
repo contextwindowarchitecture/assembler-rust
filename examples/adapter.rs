@@ -2,6 +2,8 @@
 //! the answer by exit code. 0: assembled, refusals included, with `{"payload": <base64 or null>, "trace": ...}` on
 //! stdout. 2: rejected before assembly, the problems on stderr. 3: a component this package does not provide,
 //! one `tokenizer <id> is not provided` or `renderer <id> is not provided` line each on stderr.
+//!
+//!     cargo build --release --example adapter && python3 scripts/conformance.py --command target/release/examples/adapter ...
 
 use std::io::{Read, Write};
 use std::process::ExitCode;
