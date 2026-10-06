@@ -69,3 +69,14 @@ fn the_report_is_valid_against_its_schema() {
     let errors = contextwindowarchitecture_assembler::schema::validate("conformance_report.schema.json", &committed);
     assert!(errors.is_empty(), "{errors:?}");
 }
+
+#[test]
+fn the_report_names_the_repository_and_commit_its_cases_came_from() {
+    let lock = json(&root().join("vendor/cwa.lock.json"));
+    let fresh = report(&root().join("vendor/cwa/conformance"), &lock);
+    assert_eq!(fresh["contract"], serde_json::json!({
+        "repository": "contextwindowarchitecture/website",
+        "commit": lock["website_commit"],
+        "dirty": lock["dirty"],
+    }));
+}

@@ -5,7 +5,7 @@
     python3 scripts/check_report.py --allow-failures    # exit 1 on structural problems only, while cases are pending
 
 Checks that the report validates against conformance_report.schema.json (when the jsonschema package is
-installed); that its contract names the lock's website commit and dirty flag; that cases and rejections list
+installed); that its contract names the repository and commit the vendored cases came from and the lock's dirty flag; that cases and rejections list
 every directory under the vendored conformance cases and rejections, in id order, with the rules from each
 case.json; that every skipped row's detail names, as "<kind> <id> is not provided", an optional component its case
 uses, since a port that lacks only required ones has failed the case; and, unless --allow-failures, that every case passed and
@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from conformance import LOCK, ROOT, ids, optional_lacking, read_json, required_components, schema_problem, utf16, validator_for  # noqa: E402
+from conformance import LOCK, ROOT, ids, optional_lacking, read_json, report_contract, required_components, schema_problem, utf16, validator_for  # noqa: E402
 
 
 def check_rows(report: dict, kind: str, directory: Path, ok: str, required: set[str]) -> tuple[list[str], list[str]]:
@@ -72,9 +72,9 @@ def main() -> int:
     problem = schema_problem(validator, report)
     if problem:
         problems.append(f"the report fails conformance_report.schema.json at {problem}")
-    contract = {"website_commit": lock["website_commit"], "dirty": lock["dirty"]}
+    contract = report_contract(lock)
     if report.get("contract") != contract:
-        problems.append(f"contract is {json.dumps(report.get('contract'))}, but the lock says {json.dumps(contract)}: rerun the conformance command")
+        problems.append(f"contract is {json.dumps(report.get('contract'))}, but it should be {json.dumps(contract)}: rerun the conformance command")
     failures: list[str] = []
     for kind, ok in (("cases", "passed"), ("rejections", "rejected")):
         found, failed = check_rows(report, kind, args.conformance / kind, ok, required_components(args.conformance))

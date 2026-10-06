@@ -39,6 +39,8 @@ ROOT = Path(__file__).resolve().parent.parent
 LOCK = ROOT / "vendor" / "cwa.lock.json"
 SCHEMAS = ROOT / "vendor" / "cwa" / "schema"
 MISSING = object()
+# The repository the vendored cases come from, as owner/name on GitHub. The lock does not record it.
+CONTRACT_REPOSITORY = "contextwindowarchitecture/website"
 
 
 def utf16(s: str) -> bytes:
@@ -48,6 +50,11 @@ def utf16(s: str) -> bytes:
 
 def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def report_contract(lock: dict) -> dict:
+    """The report's contract member: the repository and commit the vendored cases came from, and the lock's dirty flag."""
+    return {"repository": CONTRACT_REPOSITORY, "commit": lock["website_commit"], "dirty": lock["dirty"]}
 
 
 def validator_for(name: str) -> Any:
@@ -282,7 +289,7 @@ def main() -> int:
     required = required_components(args.conformance)
     report = {
         "implementation": implementation,
-        "contract": {"website_commit": lock["website_commit"], "dirty": lock["dirty"]},
+        "contract": report_contract(lock),
         "cases": [{"id": id, "rules": read_json(cases_dir / id / "case.json")["rules"], **run_case(adapter, trace_validator, cases_dir / id, required)}
                   for id in ids(cases_dir)],
         "rejections": [{"id": id, "rules": read_json(rejections_dir / id / "case.json")["rules"], **run_rejection(adapter, rejections_dir / id, required)}

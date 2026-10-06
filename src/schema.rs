@@ -88,16 +88,38 @@ fn collect_patterns(schema: &Value, patterns: &mut HashMap<String, Regex>) {
 }
 
 /// An ECMAScript pattern from the vendored schemas as a Rust regex: `(?![\s\S])`, the end of the input, is `\z`.
-/// `\s` elsewhere would mean a different set in Rust, so a pattern holding one is refused.
+/// `\s` elsewhere would mean a different set in Rust, so a pattern holding one is refused, and so is a `.`
+/// outside a character class; inside one (`[A-Za-z0-9_.-]`) it is a literal dot in both languages.
 pub fn translate_pattern(pattern: &str) -> Result<Regex, String> {
     let translated = pattern.replace(r"(?![\s\S])", r"\z");
-    let unanchored = translated.replace(r"[\s\S]", "").replace(r"\.", "");
+    let unanchored = without_class_dots(&translated.replace(r"[\s\S]", "").replace(r"\.", ""));
     if unanchored.contains(r"\s") || unanchored.contains(r"\S") || unanchored.contains(r"\d") || unanchored.contains(r"\w")
         || unanchored.contains(r"\b") || unanchored.contains('.')
     {
         return Err("uses a class whose meaning differs between ECMAScript and Rust".into());
     }
     Regex::new(&translated).map_err(|e| e.to_string())
+}
+
+/// The pattern without the dots inside its character classes, which are literal in ECMAScript and Rust alike.
+fn without_class_dots(pattern: &str) -> String {
+    let mut out = String::with_capacity(pattern.len());
+    let (mut in_class, mut escaped) = (false, false);
+    for c in pattern.chars() {
+        if escaped {
+            escaped = false;
+        } else if c == '\\' {
+            escaped = true;
+        } else if in_class && c == ']' {
+            in_class = false;
+        } else if c == '[' {
+            in_class = true;
+        } else if in_class && c == '.' {
+            continue;
+        }
+        out.push(c);
+    }
+    out
 }
 
 /// Validates an instance against a vendored schema, named by file (`"snapshot.schema.json"`), and returns every
@@ -418,6 +440,17 @@ mod tests {
         assert!(end.is_match("2026"));
         assert!(!end.is_match("2026\n"));
         assert!(translate_pattern(r"^\s+$").is_err());
+    }
+
+    #[test]
+    fn a_dot_in_a_class_is_a_literal_dot() {
+        let repository = translate_pattern(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?![\s\S])").unwrap();
+        assert!(repository.is_match("contextwindowarchitecture/website"));
+        assert!(repository.is_match("a.b/c-d_e"));
+        assert!(!repository.is_match("a,b/c"));
+        assert!(!repository.is_match("a/b\n"));
+        assert!(translate_pattern(r"^a.b$").is_err(), "a dot outside a class matches a different set in each language");
+        assert!(translate_pattern(r"^[\d.]$").is_err(), "a class does not excuse the other escapes");
     }
 
     #[test]

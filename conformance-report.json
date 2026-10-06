@@ -606,8 +606,9 @@
     }
   ],
   "contract": {
+    "commit": "4549cf7bc537a349d8cd0dc1a740a491f78965e0",
     "dirty": false,
-    "website_commit": "79da314331b10dccdc1fc938f8e4cc5708d9cfba"
+    "repository": "contextwindowarchitecture/website"
   },
   "implementation": {
     "language": "Rust",
