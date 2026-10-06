@@ -1,6 +1,6 @@
 # Porting the CWA assembler to a new language
 
-This template starts a CWA assembler in any language the way the Python reference assembler and the TypeScript assembler were built: from the published contract alone, test-first, with every conformance case as a test and a committed conformance report the website imports. Follow the steps in order. AGENTS.md holds the standing rules; this file is the guide.
+This template starts a CWA assembler in any language the way the Python reference assembler and the TypeScript assembler were built: from the published contract alone, test-first, with every conformance case as a test and a committed conformance report the specification repository lists. Follow the steps in order. AGENTS.md holds the standing rules; this file is the guide.
 
 ## What a port is
 
@@ -145,15 +145,14 @@ try {
 
 The runner compares exactly as a native runner must, validates each trace against `trace.schema.json` when `jsonschema` is installed, writes the report, and exits 1 unless every case passed and every rejection was rejected, apart from those skipped for an optional component the port leaves out. `python3 scripts/check_report.py` then checks the committed report is complete and well-formed; pass `--allow-failures` while `PENDING` is not empty. Once the port has a native runner, the report it writes must satisfy the same checker.
 
-## Step 6: wire the port into the website
+## Step 6: list the port in the specification repository
 
-The Assembler page shows one row per implementation and counts, per requirement, the cases each one passes. Adding a port takes one import and four small edits in the website repository:
+The specification repository keeps the report of each listed implementation under `implementations/`, and the website's Assembler page shows them, counting per requirement the cases each one passes (vendored README, Reporting results). Listing a port takes one import and a pull request there:
 
-1. Make sure the port is a git repository with a commit and an `origin` remote: the import names the repository from the remote and the run from the commit. The report's `contract` must name the repository its cases came from (`contextwindowarchitecture/contextwindowarchitecture`) and a clean commit of it that the website checkout has.
-2. Import: `node scripts/import-conformance-report.mjs ../assembler-rust contract/assembler-rust-conformance.json`.
-3. Add `{ label: 'Rust', file: 'contract/assembler-rust-conformance.json' }` to `IMPLEMENTATIONS` in `scripts/conformance-reports.mjs`, and the same pair to `IMPORTED` in `tests/website.test.mjs`.
-4. Add the file to the sources-of-truth table in the website README, and update the two sentences that name the implementations: the matrix note on `assembler.html` and the Reporting results section of `conformance/README.md`.
-5. `npm run build:contract`, `npm test`, `python3 conformance/check.py`, then commit. Re-import after every run of the port that changes its report.
+1. Make sure the port is a clean git repository with a commit and an `origin` remote: the import names the repository from the remote and the run from the commit. The report's `contract` must name the repository its cases came from (`contextwindowarchitecture/contextwindowarchitecture`) and a commit of it, as the lock records them.
+2. In a checkout of the specification repository: `python3 conformance/import_report.py ../assembler-rust rust --label Rust`.
+3. Open a pull request there with the files it writes under `implementations/`. Its CI checks the entry, and that the stored report is the `conformance-report.json` this repository publishes at the stored commit (`import_report.py --verify`). The Assembler page shows the entry once the website takes that commit.
+4. Re-import after every run of the port that changes its report.
 
 ## Portability checklist
 

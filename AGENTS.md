@@ -1,6 +1,6 @@
 # Working in this repository
 
-A Rust implementation of the CWA draft specification, started from the assembler template (PORTING.md). Its target is every published conformance case: each case's payload byte for byte and its trace, plus every rejection case rejected. `conformance-report.json` records the result, and the website imports it beside the other implementations' reports.
+A Rust implementation of the CWA draft specification, started from the assembler template (PORTING.md). Its target is every published conformance case: each case's payload byte for byte and its trace, plus every rejection case rejected. `conformance-report.json` records the result, and the specification repository lists it beside the other implementations' reports.
 
 Everything here is the rule set the Python reference assembler and the TypeScript assembler work under. It is not optional.
 
