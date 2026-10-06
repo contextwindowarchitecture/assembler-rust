@@ -1,5 +1,5 @@
-# A GitHub release for each tag, made once ci passes on the tagged commit. The notes name the website commit the
-# contract is vendored from, then list the tag's own commits, written by git-cliff from cliff.toml. A tag that is
+# A GitHub release for each tag, made once ci passes on the tagged commit. The notes name the specification repository
+# commit the contract is vendored from, then list the tag's own commits, written by git-cliff from cliff.toml. A tag that is
 # not vX.Y.Z, such as draft-release, is a prerelease. A tag pushed before this workflow existed is released by
 # hand: gh workflow run release.yml -f tag=<tag>
 name: release
@@ -40,8 +40,8 @@ jobs:
       - run: |
           : > notes.md
           if [ -f vendor/cwa.lock.json ]; then
-            commit=$(python3 -c 'import json; print(json.load(open("vendor/cwa.lock.json"))["website_commit"])')
-            printf 'Vendors the published contract at website [`%s`](https://github.com/contextwindowarchitecture/website/commit/%s).\n\n' "${commit::7}" "$commit" > notes.md
+            commit=$(python3 -c 'import json; print(json.load(open("vendor/cwa.lock.json"))["spec_commit"])')
+            printf 'Vendors the published contract at [contextwindowarchitecture/contextwindowarchitecture](https://github.com/contextwindowarchitecture/contextwindowarchitecture) [`%s`](https://github.com/contextwindowarchitecture/contextwindowarchitecture/commit/%s).\n\n' "${commit::7}" "$commit" > notes.md
           fi
           uvx git-cliff@2.14.2 --current --strip all >> notes.md
       - env:

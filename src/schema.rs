@@ -445,7 +445,7 @@ mod tests {
     #[test]
     fn a_dot_in_a_class_is_a_literal_dot() {
         let repository = translate_pattern(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?![\s\S])").unwrap();
-        assert!(repository.is_match("contextwindowarchitecture/website"));
+        assert!(repository.is_match("contextwindowarchitecture/contextwindowarchitecture"));
         assert!(repository.is_match("a.b/c-d_e"));
         assert!(!repository.is_match("a,b/c"));
         assert!(!repository.is_match("a/b\n"));

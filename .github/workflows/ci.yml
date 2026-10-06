@@ -1,4 +1,4 @@
-# The vendored contract against the website commit it pins, and the committed conformance report against the
+# The vendored contract against the specification repository commit it pins, and the committed conformance report against the
 # contract, and the suite on the oldest Rust this package supports (Cargo.toml's rust-version) and on stable.
 # A tag runs it through release.yml, on the tagged commit.
 name: ci
@@ -48,7 +48,7 @@ jobs:
       - run: python3 scripts/check_report.py
 
   contract:
-    name: vendored contract matches the website
+    name: vendored contract matches the specification repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -57,16 +57,16 @@ jobs:
       - id: lock
         run: |
           if [ -f vendor/cwa.lock.json ]; then
-            echo "commit=$(python3 -c 'import json; print(json.load(open("vendor/cwa.lock.json"))["website_commit"])')" >> "$GITHUB_OUTPUT"
+            echo "commit=$(python3 -c 'import json; print(json.load(open("vendor/cwa.lock.json"))["spec_commit"])')" >> "$GITHUB_OUTPUT"
           else
             echo "nothing vendored yet (PORTING.md, step 2)"
           fi
-      # The locked commit must be pushed to the website repository for this checkout to find it.
+      # The locked commit must be pushed to the specification repository for this checkout to find it.
       - if: steps.lock.outputs.commit != ''
         uses: actions/checkout@v5
         with:
-          repository: contextwindowarchitecture/website
+          repository: contextwindowarchitecture/contextwindowarchitecture
           ref: ${{ steps.lock.outputs.commit }}
-          path: website
+          path: spec
       - if: steps.lock.outputs.commit != ''
-        run: python3 scripts/vendor_contract.py --website website --check
+        run: python3 scripts/vendor_contract.py --spec spec --check

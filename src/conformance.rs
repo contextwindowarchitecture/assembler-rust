@@ -141,11 +141,9 @@ pub fn first_difference(expected: &Value, actual: &Value, path: &str) -> Option<
     }
 }
 
-/// The repository the vendored cases come from, as `owner/name` on GitHub. The lock does not record it.
-pub const CONTRACT_REPOSITORY: &str = "contextwindowarchitecture/website";
-
 /// Runs every case and rejection under a conformance directory and returns the report, in the shape of
-/// `schema/conformance_report.schema.json`.
+/// `schema/conformance_report.schema.json`. Its `contract` is the lock's: the specification repository the
+/// vendored cases came from (`owner/name` on GitHub), its commit, and whether the vendored sources were dirty there.
 pub fn report(conformance: &Path, lock: &Value) -> Value {
     let entries = |kind: &str, run: fn(&Path) -> Outcome| -> Vec<Value> {
         let dir = conformance.join(kind);
@@ -164,7 +162,7 @@ pub fn report(conformance: &Path, lock: &Value) -> Value {
     };
     json!({
         "implementation": {"name": IMPLEMENTATION_NAME, "version": IMPLEMENTATION_VERSION, "language": IMPLEMENTATION_LANGUAGE},
-        "contract": {"repository": CONTRACT_REPOSITORY, "commit": lock["website_commit"], "dirty": lock["dirty"]},
+        "contract": {"repository": lock["repository"], "commit": lock["spec_commit"], "dirty": lock["dirty"]},
         "cases": entries("cases", run_case),
         "rejections": entries("rejections", run_rejection),
     })

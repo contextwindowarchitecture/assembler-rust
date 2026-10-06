@@ -75,8 +75,16 @@ fn the_report_names_the_repository_and_commit_its_cases_came_from() {
     let lock = json(&root().join("vendor/cwa.lock.json"));
     let fresh = report(&root().join("vendor/cwa/conformance"), &lock);
     assert_eq!(fresh["contract"], serde_json::json!({
-        "repository": "contextwindowarchitecture/website",
-        "commit": lock["website_commit"],
+        "repository": lock["repository"],
+        "commit": lock["spec_commit"],
         "dirty": lock["dirty"],
     }));
+}
+
+#[test]
+fn the_lock_names_the_specification_repository() {
+    let lock = json(&root().join("vendor/cwa.lock.json"));
+    assert_eq!(lock["repository"], "contextwindowarchitecture/contextwindowarchitecture");
+    assert!(lock["spec_commit"].as_str().is_some_and(|c| c.len() == 40 && c.bytes().all(|b| b.is_ascii_hexdigit())));
+    assert!(lock.get("website_commit").is_none(), "the website is no longer the contract's source");
 }

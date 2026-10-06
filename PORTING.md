@@ -25,7 +25,7 @@ A port is conformant when every published case's payload matches byte for byte a
 
 - git, with commits signed off (`git commit -s`); the maintainer's commit hook requires it.
 - Python 3.10 or newer for the three bootstrap scripts under `scripts/`. They use the standard library; the `jsonschema` package is optional and adds schema validation to two of them.
-- A checkout of the website repository beside this one (`../website`), at the commit to vendor.
+- A checkout of the specification repository, [contextwindowarchitecture/contextwindowarchitecture](https://github.com/contextwindowarchitecture/contextwindowarchitecture), beside this one (`../contextwindowarchitecture`), at the commit to vendor.
 - The language's toolchain, and a JSON Schema 2020-12 validator for it. Check the portability checklist below before choosing one: the published patterns need ECMAScript regex semantics.
 
 ## Step 1: make the repository
@@ -47,11 +47,11 @@ A port is conformant when every published case's payload matches byte for byte a
 ## Step 2: vendor the contract
 
 ```sh
-python3 scripts/vendor_contract.py --website ../website
+python3 scripts/vendor_contract.py --spec ../contextwindowarchitecture
 python3 scripts/vendor_contract.py --verify
 ```
 
-This copies the contract into `vendor/cwa/` and writes `vendor/cwa.lock.json`: about 290 files, most of them case fixtures. Vendor from a committed website state; the lock records `dirty: true` otherwise, and the website then counts every case as stale. Commit as `build(contract): vendor website <short sha>`.
+This copies the contract into `vendor/cwa/` and writes `vendor/cwa.lock.json`: about 290 files, most of them case fixtures. The lock names the repository (`repository`, from the checkout's `origin` remote) and the commit (`spec_commit`), and the report's `contract` is taken from it. Vendor from a committed state of the specification repository; the lock records `dirty: true` otherwise, and every case then counts as stale. Commit as `build(contract): vendor spec <short sha>`.
 
 | Vendored path | What it is |
 | --- | --- |
@@ -149,7 +149,7 @@ The runner compares exactly as a native runner must, validates each trace agains
 
 The Assembler page shows one row per implementation and counts, per requirement, the cases each one passes. Adding a port takes one import and four small edits in the website repository:
 
-1. Make sure the port is a git repository with a commit and an `origin` remote: the import names the repository from the remote and the run from the commit. The report's `contract` must name the repository its cases came from (`contextwindowarchitecture/website`) and a clean commit of it that the website checkout has.
+1. Make sure the port is a git repository with a commit and an `origin` remote: the import names the repository from the remote and the run from the commit. The report's `contract` must name the repository its cases came from (`contextwindowarchitecture/contextwindowarchitecture`) and a clean commit of it that the website checkout has.
 2. Import: `node scripts/import-conformance-report.mjs ../assembler-rust contract/assembler-rust-conformance.json`.
 3. Add `{ label: 'Rust', file: 'contract/assembler-rust-conformance.json' }` to `IMPLEMENTATIONS` in `scripts/conformance-reports.mjs`, and the same pair to `IMPORTED` in `tests/website.test.mjs`.
 4. Add the file to the sources-of-truth table in the website README, and update the two sentences that name the implementations: the matrix note on `assembler.html` and the Reporting results section of `conformance/README.md`.

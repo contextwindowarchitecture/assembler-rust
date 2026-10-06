@@ -2,7 +2,7 @@
 
 A Rust assembler for the [Context Window Architecture](https://contextwindowarchitecture.io) (CWA) draft specification. It admits candidate items, resolves declared conflicts, fits them to a token budget, renders the payload and emits the trace.
 
-Status: passes all 61 published conformance cases and rejects all 25 rejection snapshots of the vendored contract (website `7ef1276`), including the cases of the optional `cwa-message-blocks/v1` renderer; `conformance-report.json` records the run.
+Status: passes all 61 published conformance cases and rejects all 25 rejection snapshots of the vendored contract (specification repository `a56fb2d`), including the cases of the optional `cwa-message-blocks/v1` renderer; `conformance-report.json` records the run.
 
 ## Install
 
@@ -73,11 +73,11 @@ Every reduction under budget pressure is its own fit test, and every fit test re
 cargo run --release --example conformance
 ```
 
-This runs every vendored case and rejection snapshot as `conformance/README.md` describes, natively; `scripts/conformance.py --command target/release/examples/adapter`, after `cargo build --release --example adapter`, runs them through the template's runner instead, for a cross-check. Both are examples, not binaries, so `cargo install` never puts them on a PATH: they read the cases from this checkout. It writes `conformance-report.json`, valid against `schema/conformance_report.schema.json`, whose `contract` names the repository and commit the vendored cases came from (`contextwindowarchitecture/website` and the lock's website commit), and exits 1 unless every case passed and every rejection snapshot was rejected, apart from those skipped for an optional component. A case passes only when its payload matches byte for byte and its trace matches field for field, except `trace_id`, `timings` and `recovery.detail`. The committed report is the current run: a test fails when it goes stale. A case is skipped only when it uses a tokenizer or renderer the vendored README lists under Optional, such as `cwa-message-blocks/v1`, and this package does not provide it; a case that uses only required ones and does not pass has failed.
+This runs every vendored case and rejection snapshot as `conformance/README.md` describes, natively; `scripts/conformance.py --command target/release/examples/adapter`, after `cargo build --release --example adapter`, runs them through the template's runner instead, for a cross-check. Both are examples, not binaries, so `cargo install` never puts them on a PATH: they read the cases from this checkout. It writes `conformance-report.json`, valid against `schema/conformance_report.schema.json`, whose `contract` names the repository and commit the vendored cases came from (the lock's `repository`, `contextwindowarchitecture/contextwindowarchitecture`, and its `spec_commit`), and exits 1 unless every case passed and every rejection snapshot was rejected, apart from those skipped for an optional component. A case passes only when its payload matches byte for byte and its trace matches field for field, except `trace_id`, `timings` and `recovery.detail`. The committed report is the current run: a test fails when it goes stale. A case is skipped only when it uses a tokenizer or renderer the vendored README lists under Optional, such as `cwa-message-blocks/v1`, and this package does not provide it; a case that uses only required ones and does not pass has failed.
 
 ## The contract
 
-`vendor/cwa/` holds the published contract this implementation follows: the schemas, the contract data and the conformance cases, copied from the website repository. `vendor/cwa.lock.json` pins each file by SHA-256 and records the website commit. It is Apache-2.0 licensed; see `vendor/cwa/LICENSE` and `vendor/cwa/NOTICE`.
+`vendor/cwa/` holds the published contract this implementation follows: the schemas, the contract data and the conformance cases, copied from the specification repository, [contextwindowarchitecture/contextwindowarchitecture](https://github.com/contextwindowarchitecture/contextwindowarchitecture). `vendor/cwa.lock.json` pins each file by SHA-256 and records that repository and the commit the files came from. It is Apache-2.0 licensed; see `vendor/cwa/LICENSE` and `vendor/cwa/NOTICE`.
 
 See [AGENTS.md](AGENTS.md) for the working rules.
 

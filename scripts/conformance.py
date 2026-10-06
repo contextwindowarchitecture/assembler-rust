@@ -39,8 +39,6 @@ ROOT = Path(__file__).resolve().parent.parent
 LOCK = ROOT / "vendor" / "cwa.lock.json"
 SCHEMAS = ROOT / "vendor" / "cwa" / "schema"
 MISSING = object()
-# The repository the vendored cases come from, as owner/name on GitHub. The lock does not record it.
-CONTRACT_REPOSITORY = "contextwindowarchitecture/website"
 
 
 def utf16(s: str) -> bytes:
@@ -53,8 +51,9 @@ def read_json(path: Path) -> Any:
 
 
 def report_contract(lock: dict) -> dict:
-    """The report's contract member: the repository and commit the vendored cases came from, and the lock's dirty flag."""
-    return {"repository": CONTRACT_REPOSITORY, "commit": lock["website_commit"], "dirty": lock["dirty"]}
+    """The report's contract member, from the lock: the specification repository and commit the vendored cases came
+    from, and the lock's dirty flag."""
+    return {"repository": lock["repository"], "commit": lock["spec_commit"], "dirty": lock["dirty"]}
 
 
 def validator_for(name: str) -> Any:
@@ -275,7 +274,7 @@ def main() -> int:
     args = parser.parse_args()
 
     if not LOCK.exists():
-        sys.exit("vendor/cwa.lock.json does not exist; run scripts/vendor_contract.py --website <checkout> first")
+        sys.exit("vendor/cwa.lock.json does not exist; run scripts/vendor_contract.py --spec <checkout> first")
     lock = read_json(LOCK)
     adapter = Adapter(shlex.split(args.command), args.timeout)
     trace_validator = validator_for("trace.schema.json")

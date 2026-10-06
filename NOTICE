@@ -4,5 +4,5 @@ Copyright 2026 Melvin Hillsman
 This product is licensed under the Apache License, Version 2.0 (see LICENSE).
 
 vendor/cwa/ holds the published CWA JSON Schemas, contract data and conformance cases this implementation
-follows. They come from the Context Window Architecture specification and website, Copyright 2026 Melvin
-Hillsman, also licensed under the Apache License, Version 2.0; see vendor/cwa/LICENSE and vendor/cwa/NOTICE.
+follows. They come from the Context Window Architecture specification repository
+(github.com/contextwindowarchitecture/contextwindowarchitecture), Copyright 2026 Melvin Hillsman, also licensed under the Apache License, Version 2.0; see vendor/cwa/LICENSE and vendor/cwa/NOTICE.
