@@ -324,6 +324,15 @@
       ]
     },
     {
+      "id": "digest-beyond-2-53",
+      "outcome": "passed",
+      "rules": [
+        "R-2",
+        "R-13",
+        "R-22"
+      ]
+    },
+    {
       "id": "diversity-cap",
       "outcome": "passed",
       "rules": [
@@ -606,7 +615,7 @@
     }
   ],
   "contract": {
-    "commit": "161ed75c318b7e8cb5ebc3f4deb379b98381fa37",
+    "commit": "359bdabf4b7b5657a59ea7801bf98b4192e9e4cf",
     "dirty": false,
     "repository": "contextwindowarchitecture/contextwindowarchitecture"
   },
