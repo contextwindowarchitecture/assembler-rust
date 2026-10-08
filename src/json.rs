@@ -2,7 +2,9 @@
 //!
 //! The text must be UTF-8 JSON with no unpaired surrogate escape and no number outside the double range, and
 //! every number is then held as the nearest double, so that `9007199254740993` compares and serializes as
-//! `9007199254740992` here as in every other language (R-2, R-17).
+//! `9007199254740992` here as in every other language (R-2, R-17). Reading the nearest double needs serde_json's
+//! `float_roundtrip` feature: its default parser is not correctly rounded, so without it `9007199254740991.0`
+//! reads as `9007199254740990`, and `1797693134862315700E290`, the largest double, as out of range.
 
 use serde_json::{Number, Value};
 
@@ -39,6 +41,14 @@ mod tests {
         assert_eq!(xs[0], xs[1]);
         assert!(xs[2] < xs[1]);
         assert_eq!(crate::canonical::to_string(&v), "[9007199254740992,9007199254740992,9007199254740991]");
+    }
+
+    #[test]
+    fn every_spelling_reads_as_the_nearest_double() {
+        // Spellings serde_json's default parser, which is not correctly rounded, reads as a neighbouring double.
+        let v = parse(b"[9007199254740991.0, 9007199254740993.000E+0, 4503599627370496.5, 1797693134862315700E290]").unwrap();
+        let xs: Vec<f64> = v.as_array().unwrap().iter().map(|n| n.as_f64().unwrap()).collect();
+        assert_eq!(xs, [9007199254740991.0, 9007199254740992.0, 4503599627370496.0, f64::MAX]);
     }
 
     #[test]

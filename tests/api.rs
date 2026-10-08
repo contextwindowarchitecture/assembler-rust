@@ -92,3 +92,27 @@ fn a_rejection_lists_its_problems() {
         other => panic!("{other:?}"),
     }
 }
+
+#[test]
+fn a_respelled_number_is_the_same_double() {
+    // The published case with each number beyond 2^53 written with a zero fraction: the same doubles, so the same
+    // digest, payload and trace (conformance/README.md, Numbers).
+    let id = "threshold-beyond-2-53";
+    let original = case(id);
+    let text = String::from_utf8(original.clone()).unwrap();
+    let respelled = ["9007199254740991", "9007199254740992", "9007199254740993"]
+        .iter()
+        .fold(text, |t, n| t.replace(&format!(": {n}\n"), &format!(": {n}.0\n")));
+    assert_eq!(respelled.matches(".0\n").count(), 4);
+    let (a, b) = (assemble(&original).unwrap(), assemble(respelled.as_bytes()).unwrap());
+    assert_eq!(a.trace.context.snapshot_digest, b.trace.context.snapshot_digest);
+    let expected = fs::read(Path::new(env!("CARGO_MANIFEST_DIR")).join("vendor/cwa/conformance/cases").join(id).join("expected.payload.txt")).unwrap();
+    assert_eq!(b.payload.as_deref(), Some(&expected[..]));
+    let strip = |assembly: &contextwindowarchitecture_assembler::Assembly| {
+        let mut trace = assembly.trace.to_json();
+        trace.as_object_mut().unwrap().remove("trace_id");
+        trace.as_object_mut().unwrap().remove("timings");
+        trace
+    };
+    assert_eq!(strip(&a), strip(&b));
+}
