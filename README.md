@@ -2,7 +2,7 @@
 
 A Rust assembler for the [Context Window Architecture](https://contextwindowarchitecture.io) (CWA) draft specification. It admits candidate items, resolves declared conflicts, fits them to a token budget, renders the payload and emits the trace.
 
-Status: passes all 62 published conformance cases and rejects all 25 rejection snapshots of the vendored contract (specification repository `359bdab`), including the cases of the optional `cwa-message-blocks/v1` renderer; `conformance-report.json` records the run.
+Status: passes all 65 published conformance cases and rejects all 25 rejection snapshots of the vendored contract (specification repository `c252494`), including the cases of the optional `cwa-message-blocks/v1` renderer; `conformance-report.json` records the run.
 
 ## Install
 

@@ -368,6 +368,25 @@
       ]
     },
     {
+      "id": "doubles-largest",
+      "outcome": "passed",
+      "rules": [
+        "R-2",
+        "R-13",
+        "R-17",
+        "R-22"
+      ]
+    },
+    {
+      "id": "doubles-nearest",
+      "outcome": "passed",
+      "rules": [
+        "R-2",
+        "R-13",
+        "R-22"
+      ]
+    },
+    {
       "id": "evidence-cap-omitted",
       "outcome": "passed",
       "rules": [
@@ -434,6 +453,14 @@
       "outcome": "passed",
       "rules": [
         "R-7"
+      ]
+    },
+    {
+      "id": "integer-written-as-double",
+      "outcome": "passed",
+      "rules": [
+        "R-2",
+        "R-26"
       ]
     },
     {
@@ -615,7 +642,7 @@
     }
   ],
   "contract": {
-    "commit": "359bdabf4b7b5657a59ea7801bf98b4192e9e4cf",
+    "commit": "c252494af79720d23c95d54c0cf9c638d3e43557",
     "dirty": false,
     "repository": "contextwindowarchitecture/contextwindowarchitecture"
   },
