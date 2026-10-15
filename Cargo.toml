@@ -10,7 +10,21 @@ homepage = "https://contextwindowarchitecture.io"
 readme = "README.md"
 keywords = ["llm", "context-window", "prompt", "cwa"]
 categories = ["text-processing"]
-include = ["src/**", "vendor/**", "Cargo.toml", "README.md", "LICENSE", "NOTICE"]
+# The published crate carries the source and the vendored files it embeds, with their license and the lock that
+# names the spec commit. The conformance cases stay out: only the tests and examples read them, and neither ships.
+include = [
+    "src/**",
+    "vendor/cwa.lock.json",
+    "vendor/cwa/LICENSE",
+    "vendor/cwa/NOTICE",
+    "vendor/cwa/contract/**",
+    "vendor/cwa/schema/**",
+    "vendor/cwa/conformance/README.md",
+    "Cargo.toml",
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+]
 
 [lib]
 name = "contextwindowarchitecture_assembler"
