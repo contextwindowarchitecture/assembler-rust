@@ -201,12 +201,13 @@ The assembler enforces the structural rules the spec gives it. It cannot see eve
 
 ## Extending
 
-**Your own tokenizer.** Pass any closure `Fn(&str) -> u64`, or any type that implements `Tokenizer`, with `Options::tokenizer`. Use an id that no published tokenizer uses. A published id stops the call with `Error::PublishedId`, because a trace naming a published tokenizer must mean that tokenizer's count.
+**Your own tokenizer.** Pass any closure `Fn(&str) -> u64 + Send + Sync + 'static`, or any type that implements `Tokenizer`, with `Options::tokenizer`. Use an id that no published tokenizer uses. A published id stops the call with `Error::PublishedId`, because a trace naming a published tokenizer must mean that tokenizer's count.
 
 ```rust
 use contextwindowarchitecture_assembler::{assemble_with, Options};
 
-let options = Options::new().tokenizer("acme-bpe/v3", |text: &str| my_bpe.encode(text).len() as u64);
+// move: the tokenizer must own my_bpe ('static), so it can't borrow it
+let options = Options::new().tokenizer("acme-bpe/v3", move |text: &str| my_bpe.encode(text).len() as u64);
 let assembly = assemble_with(&snapshot, &options)?;   // the snapshot's "tokenizer" is "acme-bpe/v3"
 ```
 
@@ -221,7 +222,7 @@ Load any data the tokenizer needs before the call, because `assemble` reads noth
 | Where | What |
 | --- | --- |
 | [examples/quickstart.rs](examples/quickstart.rs) | One request assembled, one refused, and the payload mapped onto provider request bodies |
-| [contextwindowarchitecture/examples](https://github.com/contextwindowarchitecture/examples) | Five runnable apps built on CWA, from a help-center Q&A bot to a production-shaped agent with MCP tools, replay and evals (Python, using assembler-python) |
+| [contextwindowarchitecture/examples](https://github.com/contextwindowarchitecture/examples) | Five runnable apps built on CWA, from a help-center Q&A bot to a production-shaped agent with MCP tools, replay and evals (Python) |
 | [contextwindowarchitecture/assembler-demo](https://github.com/contextwindowarchitecture/assembler-demo) | An inspector that runs the same question through all four assemblers, this one included, and shows every decision |
 | [contextwindowarchitecture/integrations](https://github.com/contextwindowarchitecture/integrations) | CWA placed inside existing systems |
 
@@ -234,7 +235,6 @@ Load any data the tokenizer needs before the call, because `assemble` reads noth
 | [Assembler guide](https://github.com/contextwindowarchitecture/contextwindowarchitecture/blob/main/guides/assemblers.md) | How an assembler behaves, renderer by renderer |
 | `cargo doc --open` | The API: `assemble`, `assemble_with`, `Options`, `Error` and `Trace`, with the exact rules for each |
 | [conformance-report.json](conformance-report.json) | The result for each conformance case |
-| [CHANGELOG.md](CHANGELOG.md) | Changes, generated from the commit history |
 
 ## Developing
 
