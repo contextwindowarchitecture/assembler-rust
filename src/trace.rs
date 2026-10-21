@@ -20,7 +20,8 @@ pub struct Trace {
     pub refused: Refused,
     pub context: Context,
     pub defaults_filled: Vec<DefaultFilled>,
-    /// Measured durations in milliseconds, by stage. They may differ between runs (R-23).
+    /// Measured durations in milliseconds, by stage: `admission_ms`, `resolution_ms`, `fitting_ms` and `total_ms`.
+    /// They may differ between runs (R-23).
     pub timings: BTreeMap<String, f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub recovery: Option<Recovery>,

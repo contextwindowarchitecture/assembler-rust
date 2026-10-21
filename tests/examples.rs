@@ -55,3 +55,11 @@ fn the_quickstart_runs() {
     let out = quickstart::run();
     assert!(out.contains("kb:pricing  below_threshold") && out.contains("refused: evidence_required"));
 }
+
+#[test]
+fn the_readme_shows_what_the_quickstart_prints() {
+    let readme = std::fs::read_to_string(std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("README.md")).unwrap();
+    let start = "cargo run --example quickstart\n```\n\n```text\n";
+    let shown = readme.split_once(start).and_then(|(_, rest)| rest.split_once("```")).map(|(block, _)| block);
+    assert_eq!(shown, Some(quickstart::run().as_str()));
+}

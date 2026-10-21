@@ -37,6 +37,9 @@ pub struct Assembly {
 }
 
 /// Assembles a snapshot, given as the bytes of its JSON text, with the published components alone.
+///
+/// It takes bytes rather than parsed JSON so that the I-JSON checks see the text as written. It reads no file,
+/// network, environment or model: the vendored schemas and contract data are compiled in.
 pub fn assemble(snapshot: &[u8]) -> Result<Assembly, Error> {
     assemble_with(snapshot, &Options::new())
 }
@@ -78,6 +81,7 @@ impl fmt::Display for Error {
 impl std::error::Error for Error {}
 
 /// What a call may add to the snapshot: the application's own tokenizers, under ids no published tokenizer uses.
+/// There is no option for a renderer: a snapshot names one of the published renderers this package provides.
 #[derive(Default)]
 pub struct Options {
     tokenizers: BTreeMap<String, Box<dyn Tokenizer>>,
@@ -89,7 +93,9 @@ impl Options {
         Options::default()
     }
 
-    /// Adds a tokenizer under an id. Assembly stops before it begins if the id is a published tokenizer's (R-16).
+    /// Adds a tokenizer under an id. If the id is a published tokenizer's, as the vendored conformance README lists
+    /// them, including one this package does not provide, the call returns `Error::PublishedId` before assembly,
+    /// whether or not the snapshot names that tokenizer (R-16).
     pub fn tokenizer(mut self, id: impl Into<String>, tokenizer: impl Tokenizer + 'static) -> Options {
         self.tokenizers.insert(id.into(), Box::new(tokenizer));
         self
