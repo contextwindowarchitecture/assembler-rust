@@ -10,7 +10,7 @@ Everything here is the rule set the Python reference assembler and the TypeScrip
 - **Commit unasked at each green step.** One behavior, or one refactor, per commit. Don't wait to be asked.
 - **Conventional Commits, signed off.** `git commit -s` with a Conventional Commits subject (`feat:`, `fix:`, `test:`, `docs:`, `chore:`, `refactor:`, `build:`, `ci:`).
 - **Never push.** The maintainer publishes commits. Don't open pull requests or fetch-and-rebase either.
-- **Docs change in the same commit as the behavior.** A commit that changes behavior also updates README.md, this file, or the code comments that describe it. Never batch doc updates at the end.
+- **Docs change in the same commit as the behavior.** A commit that changes behavior also updates the rustdoc of the API it changes, the README section a caller would read, this file or CONTRIBUTING.md when a rule changes, and the code comments that describe it. Never batch doc updates at the end.
 - **Prove a test protects something.** Before claiming it does, break the code on purpose and watch the test fail. Restore the code from a copy made beforehand, never with `git checkout` or `git restore`, which also discard uncommitted work; then clear any bytecode or build cache that could outlive the edit.
 
 ## Working from the spec
@@ -49,7 +49,11 @@ Everything here is the rule set the Python reference assembler and the TypeScrip
 
 ## Documentation
 
-- Update documentation incrementally: README.md status, this file when a rule changes, and code comments, in the commit that changes the behavior.
+- Update documentation incrementally: the rustdoc of the API a change touches, the README section a caller would read, this file or CONTRIBUTING.md when a rule changes, and code comments, in the commit that changes the behavior.
+- **The README is for application developers, not a log of work done.** Keep its sections, in this order: What is assembler-rust, Status, Install, Quickstart, Core concepts, Sending the payload to a model, Framework-agnostic and compatibility, Security model, Extending, Examples, Documentation, Developing, Other implementations, License.
+  - Status is three sentences at most and quotes no counts of cases, rejections or requirements. It links `conformance-report.json`, which holds them and cannot go stale.
+  - A change a caller can see gets a sentence or two in the section it affects. The exact rule (which `Error` variant, and when) goes in the rustdoc of the API it belongs to; how the code is laid out and how to work on it goes in CONTRIBUTING.md. Never append clauses to Status.
+  - Code in the README must run. Quickstart mirrors `examples/quickstart.rs`, which `tests/examples.rs` runs.
 - Use Mermaid diagrams wherever a flow, ordering or plan reads faster as a picture. Check that each parses with Mermaid 12 before committing.
 
 ## Commands
