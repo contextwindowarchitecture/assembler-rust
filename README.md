@@ -78,9 +78,9 @@ let snapshot = serde_json::to_vec(&json!({
 match assemble(&snapshot) {
     Ok(assembly) => {
         match &assembly.payload {
-            // {"system": [...], "tools": [...], "messages": [...]}
+            // {"messages": [...], "system": [...], "tools": [...]}
             Some(bytes) => { let request: serde_json::Value = serde_json::from_slice(bytes)?; }
-            None => println!("refused: {:?}", assembly.trace.refused.reason),
+            None => println!("refused: {}", assembly.trace.refused.reason.as_deref().unwrap_or("")),
         }
         for row in &assembly.trace.excluded {
             println!("{} {}", row["item_id"], row["reason"]);   // "kb:pricing" "below_threshold"
@@ -142,7 +142,7 @@ The [specification](https://contextwindowarchitecture.io/spec.html) defines each
 The `cwa-messages/v1` renderer writes a provider-neutral request as JSON:
 
 ```json
-{"system": [{"id": "...", "text": "..."}], "tools": [{"id": "...", "text": "..."}], "messages": [{"role": "user", "content": "..."}]}
+{"messages": [{"content": "...", "role": "user"}], "system": [{"id": "...", "text": "..."}], "tools": [{"id": "...", "text": "..."}]}
 ```
 
 Only governance items reach `system` and `tools`. Everything else, prior turns included, is escaped into a single user message. Turning that into a provider's request body takes a few lines. The crate doesn't export them; [examples/quickstart.rs](examples/quickstart.rs) defines both, `to_anthropic` and `to_openai`, for you to copy:
@@ -175,7 +175,7 @@ Send the body with whichever HTTP client or SDK you already use. If you use prom
 | Renderer | `cwa-message-blocks/v1` | The same request with per-item blocks for prompt caching (optional in the spec) |
 | Renderer | `fixture-xml/v1` | Conformance tests: one plain-text block, with no system channel |
 
-- **Cost.** Every reduction under budget pressure is its own fit test, and each fit test renders and counts the whole payload. Work therefore grows with the number of reductions times the payload's size. On an Apple-silicon laptop, a release build sheds 499 of 500 chunks of about 1 KB each in about 0.2 s. Keep the cost down at the source: send no more passages than the route's budget can use, and bound slots with `max_per_source` or `max_tokens`.
+- **Cost.** Every reduction under budget pressure is its own fit test, and each fit test renders and counts the whole payload. Work therefore grows with the number of reductions times the payload's size. On an Apple-silicon laptop, a release build sheds 499 of 500 chunks of about 1 KB each in about 0.25 s. Keep the cost down at the source: send no more passages than the route's budget can use, and bound slots with `max_per_source` or `max_tokens`.
 
 For exact counts, pass your model's own tokenizer (see [Extending](#extending)).
 
