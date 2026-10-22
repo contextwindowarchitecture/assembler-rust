@@ -114,11 +114,12 @@ cargo run --example quickstart
 refused: evidence_required, recovery: request_context
 ```
 
-The low-scoring chunk was left out, and the trace says why. When the retriever finds nothing, the route requires evidence, so the assembler refuses before any model is called. The trace then suggests what to do next.
+The example prints the request after mapping it for the Anthropic Messages API, so `system` is one string here rather than the renderer's list (see [Sending the payload to a model](#sending-the-payload-to-a-model)). The low-scoring chunk was left out, and the trace says why. When the retriever finds nothing, the route requires evidence, so the assembler refuses before any model is called. The trace then suggests what to do next.
 
 A call that can't assemble at all returns an `Error`, with no payload and no trace:
 - `Error::Rejected` lists the problems with a snapshot that is malformed, isn't I-JSON, or breaks a rule the spec checks up front.
 - `Error::Unsupported` means the snapshot names a tokenizer or renderer this package doesn't provide.
+- `Error::PublishedId` means `Options::tokenizer` was given the id of a published tokenizer (see [Extending](#extending)).
 
 ## Core concepts
 
@@ -144,7 +145,7 @@ The `cwa-messages/v1` renderer writes a provider-neutral request as JSON:
 {"system": [{"id": "...", "text": "..."}], "tools": [{"id": "...", "text": "..."}], "messages": [{"role": "user", "content": "..."}]}
 ```
 
-Only governance items reach `system` and `tools`. Everything else, prior turns included, is escaped into a single user message. Turning that into a provider's request body takes a few lines. [examples/quickstart.rs](examples/quickstart.rs) has both mappings:
+Only governance items reach `system` and `tools`. Everything else, prior turns included, is escaped into a single user message. Turning that into a provider's request body takes a few lines. The crate doesn't export them; [examples/quickstart.rs](examples/quickstart.rs) defines both, `to_anthropic` and `to_openai`, for you to copy:
 
 ```rust
 let request: serde_json::Value = serde_json::from_slice(&payload)?;
